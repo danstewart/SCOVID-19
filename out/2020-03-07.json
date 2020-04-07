@@ -1,0 +1,17 @@
+{
+  "breakdown": {
+    "Ayrshire and Arran": "1",
+    "Fife": "2",
+    "Forth Valley": "2",
+    "Grampian": "4",
+    "Greater Glasgow and Clyde": "2",
+    "Lanarkshire": "2",
+    "Lothian": "2",
+    "Tayside": "1"
+  },
+  "totals": {
+    "died": "0",
+    "negative": "1664",
+    "positive": "16"
+  }
+}

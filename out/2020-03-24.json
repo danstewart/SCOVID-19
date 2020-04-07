@@ -1,0 +1,21 @@
+{
+  "breakdown": {
+    "Ayrshire and Arran": "41",
+    "Borders": "12",
+    "Dumfries and Galloway": "26",
+    "Fife": "25",
+    "Forth Valley": "43",
+    "Grampian": "24",
+    "Greater Glasgow and Clyde": "183",
+    "Highland": "13",
+    "Lanarkshire": "75",
+    "Lothian": "70",
+    "Shetland": "24",
+    "Tayside": "48"
+  },
+  "totals": {
+    "died": "16",
+    "negative": "9384",
+    "positive": "584"
+  }
+}
