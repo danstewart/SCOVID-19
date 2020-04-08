@@ -12,3 +12,8 @@ deactivate
 ## Notes
 On April 2nd the death counting process changed.  
 https://www.gov.scot/news/new-process-for-reporting-covid-19-deaths/
+
+## Sources
+https://www.gov.scot/coronavirus-covid-19/
+https://www.gov.scot/publications/coronavirus-covid-19-tests-and-cases-in-scotland/
+https://www.gov.scot/publications/coronavirus-covid-19-data-definitions-and-sources/

@@ -6,16 +6,14 @@ import json
 import requests
 from bs4 import BeautifulSoup
 
-# URL='https://www.gov.scot/coronavirus-covid-19/'
-URL='https://web.archive.org/web/20200310210227/https://www.gov.scot/coronavirus-covid-19/'
+URL='https://www.gov.scot/publications/coronavirus-covid-19-tests-and-cases-in-scotland/'
 
-def main():
+def main(verbose=False):
     headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
     html      = requests.get(URL, headers = headers)
-    print(html)
     parsed    = BeautifulSoup(html.text, 'html.parser')
-    breakdown = get_cases_by_area(parsed)
-    totals    = get_totals(parsed)
+    totals    = get_totals(parsed, verbose)
+    breakdown = get_cases_by_area(parsed, verbose)
 
     print(json.dumps(
         { 'totals': totals, 'breakdown': breakdown },
@@ -27,11 +25,13 @@ def main():
 
 def clean_str(string):
     if not string: return ''
-    return string.strip().replace(u'\u00a0', ' ')
+    return str(string).strip().replace(u'\u00a0', ' ')
 
 
 def clean_int(string):
     if not string: return 0
+    if string == '*': return '<5' # A * represents less than 5 cases
+
     clean = re.sub('\D', '', string)
 
     try:
@@ -42,23 +42,24 @@ def clean_int(string):
 
 def get_cases_by_area(parsed, verbose = False):
     stats = {}
-    total = 0
+    mapping = [ 'cases', 'in_hospital', 'in_icu' ]
 
     isHeader = True
-    table = parsed.find('table')
+    table = parsed.find('table', class_='Table')
     for row in table.findAll('tr'):
         if (isHeader):
             isHeader = False
             continue
 
-        cells           = row.findAll('td')
-        area            = clean_str(cells[0].get_text())
-        number_of_cases = clean_int(clean_str(cells[1].get_text()))
-        stats[area]     = number_of_cases
-        total           = total + number_of_cases
+        cells = row.findAll('td')
+        cells = list(map(clean_str, [c.get_text() for c in cells]))
+        key   = cells.pop(0)
+        cells = map(clean_int, cells)
+        stat  = dict(zip(mapping, cells))
+        stats[key] = stat
 
         if (verbose):
-            print('{}: {}'.format(area, number_of_cases))
+            print('{} has {} cases, {} in hospital and {} in the ICU'.format(key, *stat.values()))
 
     return stats
 
@@ -67,7 +68,7 @@ def get_totals(parsed, verbose = False):
     stats = []
     mapping = [ 'negative', 'positive', 'died' ]
 
-    totals = parsed.find(id='overview').findAll('ul')[2].findAll('li')
+    totals = parsed.find(id='preamble').findAll('ul')[0].findAll('li')
     for total in totals:
         num = clean_str(total.get_text()).split(' ')[0]
         stats.append(num)
@@ -81,7 +82,7 @@ def get_totals(parsed, verbose = False):
 
 # In debug mode don't use a try/except
 if (len(sys.argv) >= 2 and sys.argv[1] == '--debug'):
-    main()
+    main(verbose=True)
     sys.exit(0)
 
 try:
