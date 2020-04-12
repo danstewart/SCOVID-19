@@ -16,9 +16,9 @@
       "in_icu": "6"
     },
     "Eileanan Siar (Western Isles)": {
-      "cases": "*",
-      "in_hospital": "*",
-      "in_icu": "*"
+      "cases": "<5",
+      "in_hospital": "<5",
+      "in_icu": "<5"
     },
     "Fife": {
       "cases": "255",
@@ -56,14 +56,14 @@
       "in_icu": "41"
     },
     "Orkney": {
-      "cases": "*",
-      "in_hospital": "*",
-      "in_icu": "*"
+      "cases": "<5",
+      "in_hospital": "<5",
+      "in_icu": "<5"
     },
     "Shetland": {
       "cases": "43",
-      "in_hospital": "*",
-      "in_icu": "*"
+      "in_hospital": "<5",
+      "in_icu": "<5"
     },
     "Tayside": {
       "cases": "586",
