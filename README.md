@@ -1,4 +1,21 @@
-## Install
+## Site
+```
+# Bootstrap
+[[ -f /bootstrapped ]] || bash <(curl -s https://raw.githubusercontent.com/danstewart/server-bootstrap/master/bootstrap.sh)
+
+# Link
+sudo ln -s $(pwd)/site/ /data/www/scovid19.xyz
+
+# nginx
+sudo cp nginx/scovid19.xyz /etc/nginx/sites-available/
+sudo ln -s /etc/nginx/sites-available/scovid19.xyz /etc/nginx/sites-enabled/
+sudo systemctl restart nginx
+
+# Certbot
+sudo certbot --nginx
+```
+
+## Script
 ```
 python3 -m venv venv
 source venv/bin/activate

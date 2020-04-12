@@ -1,0 +1,18 @@
+# Certbot will rejig this into the correct SSL config
+server {
+	listen 80;
+	listen [::]:80;
+
+	server_name scovid19.xyz www.scovid19.xyz;
+
+	root /data/www/scovid19.xyz;
+	index index.html;
+
+	location / {
+		try_files $uri $uri/ =404;
+	}
+
+	error_page 500 502 503 504 /500.html;
+	client_max_body_size 4G;
+	keepalive_timeout 10;
+}

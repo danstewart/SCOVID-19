@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+# Scrape the gov.scot website for the latest COVID-19 stats and store them as JSON
+
 import re
 import sys
 import json
