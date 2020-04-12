@@ -44,7 +44,7 @@ async function getData() {
 
 	return {
 		labels: dates,
-		datasets: Object.keys(datasets).map(location => {
+		datasets: Object.keys(datasets).sort().map(location => {
 			let color = getColor(location);
 
 			return {
