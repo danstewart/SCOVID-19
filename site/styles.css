@@ -2,3 +2,19 @@
   color: #ffffff;
   background-color: #005eb8;
 }
+
+@media only screen and (min-width: 1000px) {
+  .chart-container {
+    position: relative;
+    height: 60vh;
+    width: 45vw;
+  }
+}
+
+@media only screen and (max-width: 1000px) {
+  .chart-container {
+    position: relative;
+    height: 60vh;
+    width: 85vw;
+  }
+}

@@ -1,22 +1,53 @@
-// Draw the chart
-getData().then(data => {
-	Chart.defaults.line.spanGaps = true;
-	let ctx = document.getElementById('casesChart');
-	let casesChart = new Chart(ctx, {
+// Draw the charts
+Chart.defaults.line.spanGaps = true;
+
+getBreakdownData().then(data => {
+	let breakdownCtx = document.getElementById('breakdownChart');
+	let breakdownChart = new Chart(breakdownCtx, {
 		type:    'line',
 		data:    data,
-		options: {},
+		options: {
+			maintainAspectRatio: false,
+			responsive: true,
+		},
 	});
-	
+
 	// TODO: Add buttons to change dates
-	// casesChart.data.datasets[0].data.pop();
-	// casesChart.data.labels.pop();
-	// casesChart.update();
+	// breakdownChart.data.datasets[0].data.pop();
+	// breakdownChart.data.labels.pop();
+	// breakdownChart.update();
+});
+
+getTotalsData().then(data => {
+	let totalsCtx = document.getElementById('totalsChart');
+	let totalsChart = new Chart(totalsCtx, {
+		type:    'line',
+		data:    data,
+		options: {
+			maintainAspectRatio: false,
+			responsive: true,
+		},
+	});
+
+	// HACK: If not mobile then add padding so this graph aligns with the other graph
+	if (!((typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1))) {
+		totalsChart.options.layout.padding.top = 42;
+		totalsChart.update();
+	}
+
 });
 
 // Transform the breakdown.json into the correct format for chartjs
-async function getData() {
-	let json = await getJSON();
+async function getBreakdownData() {
+	return getData('breakdown.json', (json, dt, cat) => json[dt][cat]['cases']);
+}
+
+async function getTotalsData() {
+	return getData('totals.json', (json, dt, cat) => json[dt][cat]);
+}
+
+async function getData(filename, diggerFn) {
+	let json = await getJSON(filename);
 
 	let dates    = Object.keys(json).sort();
 	let datasets = {};
@@ -24,19 +55,19 @@ async function getData() {
 	let counter  = 0;
 
 	dates.forEach(dt => {
-		Object.keys(json[dt]).forEach(location => {
-			if (!datasets[location]) {
-				datasets[location] = new Array();
-			}
-			
-			// Back fill the stats with zeroes for dates where there is no data
-			if (!seen[location]) {
-				Array.from({ length: counter }, () => datasets[location].push(0) );
-				seen[location] = true;
+		Object.keys(json[dt]).forEach(category => {
+			if (!datasets[category]) {
+				datasets[category] = new Array();
 			}
 
-			datasets[location].label = location;
-			datasets[location].push(json[dt][location]['cases']);
+			// Back fill the stats with zeroes for dates where there is no data
+			if (!seen[category]) {
+				Array.from({ length: counter }, () => datasets[category].push(0) );
+				seen[category] = true;
+			}
+
+			datasets[category].label = category;
+			datasets[category].push(diggerFn(json, dt, category));
 		});
 
 		counter++;
@@ -44,12 +75,12 @@ async function getData() {
 
 	return {
 		labels: dates,
-		datasets: Object.keys(datasets).sort().map(location => {
-			let color = getColor(location);
+		datasets: Object.keys(datasets).sort().map(category => {
+			let color = getColor(category);
 
 			return {
-				label: location,
-				data: datasets[location],
+				label: category.charAt(0).toUpperCase() + category.slice(1),
+				data: datasets[category],
 				borderColor: color,
 				backgroundColor: color,
 				fill: false,
@@ -58,34 +89,40 @@ async function getData() {
 	};
 }
 
-function getColor(location) {
+// Fetch the breakdown.json from the server
+function getJSON(filename) {
+	return fetch(filename).then(response => response.json())
+}
+
+function getColor(key) {
 	let colorMap = {
-		'Ayrshire and Arran': 'orange',
-		'Borders': '#ff6f69',
-		'Dumfries and Galloway': '#ffcc5c',
-		'Eileanan Siar (Western Isles)': '#baffc9',
-		'Fife': 'pink',
-		'Forth Valley': 'navy',
-		'Grampian': '#fb958b',
-		'Golden Jubilee National Hospital': '#4c516d',
-		'Greater Glasgow and Clyde': '#e8ca93',
-		'Highland': 'green',
-		'Lanarkshire': '#bae1ff',
-		'Lothian': '#007777',
-		'Orkney': '#88d8b0',
-		'Shetland': '#d696bb',
-		'Tayside': 'rebeccapurple',
+		// Breakdown
+		// Ordered approx by most cases
+		'Greater Glasgow and Clyde': '#a6cee3',
+		'Lothian': '#1f78b4',
+		'Tayside': '#b2df8a',
+		'Lanarkshire': '#33a02c',
+		'Ayrshire and Arran': '#fb9a99',
+		'Fife': '#e31a1c',
+		'Forth Valley': '#fdbf6f',
+		'Grampian': '#ff7f00',
+		'Borders': '#cab2d6',
+		'Dumfries and Galloway': '#6a3d9a',
+		'Highland': '#ffff99',
+		'Shetland': '#b15928',
+		'Eileanan Siar (Western Isles)': '#66c2a5',
+		'Orkney': '#a6d854',
+		'Golden Jubilee National Hospital': '#b3b3b3',
+		
+		// Totals
+		'died': '#b3b3b3',
+		'positive': '#ff7f00',
+		'negative': '#b2df8a'
 	};
 
-	if (colorMap[location]) {
-		return colorMap[location];
+	if (colorMap[key]) {
+		return colorMap[key];
 	}
 
 	return 'gray';
 }
-
-// Fetch the breakdown.json from the server
-function getJSON() {
-	return fetch('breakdown.json').then(response => response.json())
-}
-

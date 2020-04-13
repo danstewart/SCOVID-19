@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
-
-		<title>Charts</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta name="description" content="Scottish COVID-19 stats" />
 		<meta name="author" content="Dan Stewart" />
+
+		<title>Charts</title>
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.1/css/bulma.min.css" />
 		<link rel="stylesheet" href="styles.css" />
 	</head>
@@ -15,8 +15,8 @@
 		<!-- Hero -->
 		<section class="hero scotflag">
 			<div class="hero-body">
-				<h1 class="title scotflag">SCOVID19</h1>
-				<h2 class="subtitle scotflag">COVID-19 Stats for Scotland</h2>
+					<h1 class="title is-2 scotflag">SCOVID19</h1>
+					<h2 class="subtitle is-5 scotflag">COVID-19 Stats for Scotland</h2>
 			</div>
 		</section>
 
@@ -25,14 +25,35 @@
 			<div class="columns is-desktop">
 				<div class="column">
 					<p class="subtitle has-text-centered has-text-weight-semibold is-family-monospace">Cases by location</p>
-					<canvas id="casesChart" width="100%" height="60%"></canvas>
+					<!-- Cases by location -->
+					<div class="chart-container">
+						<canvas id="breakdownChart"></canvas>
+					</div>
 				</div>
 				<div class="column">
-					<p class="subtitle has-text-centered has-text-weight-semibold is-family-monospace">Deaths</p>
-					<canvas id="deathsChart" width="100%" height="60%"></canvas>
+					<p class="subtitle has-text-centered has-text-weight-semibold is-family-monospace">Cases across the country</p>
+					<div class="chart-container">
+						<canvas id="totalsChart"></canvas>
+					</div>
 				</div>
 			</div>
 		</section>
+
+		<footer class="footer">
+			<div class="content has-text-centered">
+				<p>All stats are from the <a href='https://www.gov.scot'>gov.scot</a> website and can be checked here:</p>
+				<p>
+					<a href='https://www.gov.scot/coronavirus-covid-19/'>https://www.gov.scot/coronavirus-covid-19/</a>
+					|
+					<a href='https://web.archive.org/web/*/https://www.gov.scot/coronavirus-covid-19/'>archive.org</a>
+				</p>
+				<p>
+					<a href='https://www.gov.scot/publications/coronavirus-covid-19-tests-and-cases-in-scotland/'>https://www.gov.scot/publications/coronavirus-covid-19-tests-and-cases-in-scotland/</a>
+					|
+					<a href='https://web.archive.org/web/*/https://www.gov.scot/publications/coronavirus-covid-19-tests-and-cases-in-scotland/'>archive.org</a>
+				</p>
+			</div>
+		</footer>
 
 		<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 		<script src="script.js"></script>
