@@ -8,10 +8,13 @@ import json
 breakdown = {}
 totals    = {}
 
-outpath = '/code/SCOVID-19/out'
-for file in sorted(os.listdir(outpath)):
+BASE_PATH ='/code/SCOVID-19'
+OUT_PATH = os.path.join(BASE_PATH, 'out') 
+BREAKDOWN_PATH = os.path.join(BASE_PATH, 'site', 'breakdown.json')
+
+for file in sorted(os.listdir(OUT_PATH)):
 	date = os.path.splitext(file)[0]
-	filepath = os.path.join(outpath, file)
+	filepath = os.path.join(OUT_PATH, file)
 	with open(filepath, 'r') as f:
 		contents = f.read()
 		parsed = json.loads(contents)
@@ -22,10 +25,13 @@ for file in sorted(os.listdir(outpath)):
 			breakdown[date] = parsed['breakdown']
 
 
-# TODO: Write to file
-print(json.dumps(
+output = json.dumps(
 	breakdown,
 	sort_keys=True,
 	indent=2,
 	separators=(',', ': ')
-))
+)
+
+with open(BREAKDOWN_PATH, 'w') as f:
+	f.write(output)
+
