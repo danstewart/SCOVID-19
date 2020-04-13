@@ -47,7 +47,7 @@ def get_cases_by_area(parsed, verbose = False):
 	mapping = [ 'cases', 'in_hospital', 'in_icu' ]
 
 	isHeader = True
-	table = parsed.find('table', class_='Table')
+	table = parsed.find('table')
 	for row in table.findAll('tr'):
 		if (isHeader):
 			isHeader = False
