@@ -77,8 +77,8 @@
     }
   },
   "totals": {
-    "died": "447",
-    "negative": "22,561",
-    "positive": "4,957"
+    "died": 447,
+    "negative": 22561,
+    "positive": 4957
   }
 }

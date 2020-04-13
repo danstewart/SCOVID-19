@@ -1,39 +1,39 @@
 {
   "breakdown": {
     "Ayrshire and Arran": {
-      "cases": "4"
+      "cases": 4
     },
     "Borders": {
-      "cases": "3"
+      "cases": 3
     },
     "Fife": {
-      "cases": "4"
+      "cases": 4
     },
     "Forth Valley": {
-      "cases": "6"
+      "cases": 6
     },
     "Grampian": {
-      "cases": "11"
+      "cases": 11
     },
     "Greater Glasgow and Clyde": {
-      "cases": "21"
+      "cases": 21
     },
     "Lanarkshire": {
-      "cases": "7"
+      "cases": 7
     },
     "Lothian": {
-      "cases": "20"
+      "cases": 20
     },
     "Shetland": {
-      "cases": "6"
+      "cases": 6
     },
     "Tayside": {
-      "cases": "3"
+      "cases": 3
     }
   },
   "totals": {
-    "died": "1",
-    "negative": "3229",
-    "positive": "85"
+    "died": 1,
+    "negative": 3229,
+    "positive": 85
   }
 }
