@@ -4,36 +4,36 @@
       "cases": "4"
     },
     "Borders": {
-      "cases": "2"
+      "cases": "3"
     },
     "Fife": {
-      "cases": "3"
+      "cases": "4"
     },
     "Forth Valley": {
       "cases": "6"
     },
     "Grampian": {
-      "cases": "7"
+      "cases": "11"
     },
     "Greater Glasgow and Clyde": {
-      "cases": "10"
+      "cases": "21"
     },
     "Lanarkshire": {
       "cases": "7"
     },
     "Lothian": {
-      "cases": "11"
+      "cases": "20"
     },
     "Shetland": {
       "cases": "6"
     },
     "Tayside": {
-      "cases": "4"
+      "cases": "3"
     }
   },
   "totals": {
-    "died": "0",
-    "negative": "2832",
-    "positive": "60"
+    "died": "1",
+    "negative": "3229",
+    "positive": "85"
   }
 }
