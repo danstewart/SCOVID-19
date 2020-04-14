@@ -1,46 +1,73 @@
-// Draw the charts
+// Configuration
+var limitDays = true;
+const DEFAULT_DAYS = 21;
 Chart.defaults.line.spanGaps = true;
 
-getBreakdownData().then(data => {
-	let breakdownCtx = document.getElementById('breakdownChart');
-	let breakdownChart = new Chart(breakdownCtx, {
-		type:    'line',
-		data:    data,
-		options: {
-			maintainAspectRatio: false,
-			responsive: true,
-		},
-	});
+var breakdownChart;
+var totalsChart;
+init();
 
-	// TODO: Add buttons to change dates
-	// breakdownChart.data.datasets[0].data.pop();
-	// breakdownChart.data.labels.pop();
-	// breakdownChart.update();
-});
+// Event handlers
+function toggleData(e) {
+	let on = e.innerHTML == 'Show less data';
 
-getTotalsData().then(data => {
-	// Hide the negative dataset by default
-	data.datasets.map(set => {
-		if (set.label === 'Negative') set.hidden = true;
-	});
+	// TODO: Would be better to update the datasets and call .update()
+	breakdownChart.destroy();
+	totalsChart.destroy();
 
-	let totalsCtx = document.getElementById('totalsChart');
-	let totalsChart = new Chart(totalsCtx, {
-		type:    'line',
-		data:    data,
-		options: {
-			maintainAspectRatio: false,
-			responsive: true,
-		},
-	});
-
-	// HACK: If not mobile then add padding so this graph aligns with the other graph
-	if (!((typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1))) {
-		totalsChart.options.layout.padding.top = 42;
-		totalsChart.update();
+	if (on) {
+		e.innerHTML = "Show more data";
+		limitDays = true;
+	} else {
+		e.innerHTML = "Show less data";
+		limitDays = false;
 	}
 
-});
+	init();
+}
+
+function init() {
+	// Draw the charts
+	getBreakdownData().then(data => {
+		let breakdownCtx = document.getElementById('breakdownChart');
+		breakdownChart = new Chart(breakdownCtx, {
+			type:    'line',
+			data:    data,
+			options: {
+				maintainAspectRatio: false,
+				responsive: true,
+			},
+		});
+
+		// TODO: Add buttons to change dates
+		// breakdownChart.data.datasets[0].data.pop();
+		// breakdownChart.data.labels.pop();
+		// breakdownChart.update();
+	});
+
+	getTotalsData().then(data => {
+		// Hide the negative dataset by default
+		data.datasets.map(set => {
+			if (set.label === 'Negative') set.hidden = true;
+		});
+
+		let totalsCtx = document.getElementById('totalsChart');
+		totalsChart = new Chart(totalsCtx, {
+			type:    'line',
+			data:    data,
+			options: {
+				maintainAspectRatio: false,
+				responsive: true,
+			},
+		});
+
+		// HACK: If not mobile then add padding so this graph aligns with the other graph
+		if (!((typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1))) {
+			totalsChart.options.layout.padding.top = 42;
+			totalsChart.update();
+		}
+	});
+}
 
 // Transform the breakdown.json into the correct format for chartjs
 async function getBreakdownData() {
@@ -58,6 +85,8 @@ async function getData(filename, diggerFn) {
 	let datasets = {};
 	let seen     = {};
 	let counter  = 0;
+
+	if (limitDays) dates=dates.slice(-DEFAULT_DAYS);
 
 	dates.forEach(dt => {
 		Object.keys(json[dt]).forEach(category => {
