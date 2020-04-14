@@ -19,6 +19,11 @@ getBreakdownData().then(data => {
 });
 
 getTotalsData().then(data => {
+	// Hide the negative dataset by default
+	data.datasets.map(set => {
+		if (set.label === 'Negative') set.hidden = true;
+	});
+
 	let totalsCtx = document.getElementById('totalsChart');
 	let totalsChart = new Chart(totalsCtx, {
 		type:    'line',
