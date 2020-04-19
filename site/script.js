@@ -66,6 +66,20 @@ function init() {
 			totalsChart.options.layout.padding.top = 42;
 			totalsChart.update();
 		}
+
+		fillStatsBoard(data.datasets);
+	});
+}
+
+// Populates the stats board
+function fillStatsBoard(dataset) {
+	// Mapping of stat type to dataset index
+	let typeToIndex = { Deaths: 0, Cases: 2 };
+
+	Object.entries(typeToIndex).forEach(([type, idx]) => {
+		let last2 = dataset[idx].data.slice(-2);
+		document.getElementById(`new${type}`).innerHTML = last2[1] - last2[0];
+		document.getElementById(`total${type}`).innerHTML = last2[1];
 	});
 }
 
