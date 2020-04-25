@@ -38,7 +38,7 @@
 				<div class="tile is-parent">
 					<article class="has-text-centered tile is-child notification" style="background-color: #249596; color: white;">
 						<p class="heading is-size-6">Total Positive Cases</p>
-						<p id="totalCases" class="title">&nbsp;</p>
+						<p id="totalCases" class="title">{{ summary.total_cases }}</p>
 					</article>
 				</div>
 			</div>
@@ -46,7 +46,7 @@
 				<div class="tile is-parent">
 					<article class="has-text-centered tile is-child notification" style="background-color: #67a23f; color: white;">
 						<p class="heading is-size-6">New Cases Today</p>
-						<p id="newCases" class="title">&nbsp;</p>
+						<p id="newCases" class="title">{{ summary.new_cases }}</p>
 					</article>
 				</div>
 			</div>
@@ -54,7 +54,7 @@
 				<div class="tile is-parent">
 					<article class="has-text-centered tile is-child notification" style="background-color: #f6ae33; color: white;">
 						<p class="heading is-size-6">Total Deaths</p>
-						<p id="totalDeaths" class="title">&nbsp;</p>
+						<p id="totalDeaths" class="title">{{ summary.total_deaths }}</p>
 					</article>
 				</div>
 			</div>
@@ -62,7 +62,7 @@
 				<div class="tile is-parent">
 					<article class="has-text-centered tile is-child notification" style="background-color: #f94333; color: white;">
 						<p class="heading is-size-6">New Deaths Today</p>
-						<p id="newDeaths" class="title">&nbsp;</p>
+						<p id="newDeaths" class="title">{{ summary.new_deaths }}</p>
 					</article>
 				</div>
 			</div>

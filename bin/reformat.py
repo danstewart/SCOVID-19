@@ -19,7 +19,7 @@ def clean_int(string):
 		return 0
 
 
-outpath = '/code/SCOVID-19/out'
+outpath = '/code/SCOVID-19/data'
 for file in sorted(os.listdir(outpath)):
 	filepath = os.path.join(outpath, file)
 
