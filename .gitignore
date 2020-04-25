@@ -2,4 +2,6 @@ venv/
 .vscode/
 site/*.json
 **/__pycache__/**
-site/index.html # generated
+
+# Generated
+site/index.html
