@@ -1,18 +1,21 @@
 #!/usr/bin/env python3
 
+from dotenv import load_dotenv
+load_dotenv()
+
+import os
 import sys
-sys.path.append('/code/SCOVID-19/lib')
+sys.path.append(os.path.join(os.environ['PROJECT_ROOT'], 'lib'))
 
 import json
-import os
 import IO
 import Util
 from jinja2 import Environment, FileSystemLoader, Template
 
+
 def main():
 	stats = load_stats()
-	generate_totals_json(stats)
-	generate_breakdown_json(stats)
+	generate_js(stats)
 	generate_site(stats)
 
 
@@ -22,9 +25,9 @@ def load_stats():
 
 	for file in os.listdir(stat_dir):
 		file_contents = IO.read_file(os.path.join(stat_dir, file))
-		parsed = json.loads(file_contents)
-		date = os.path.splitext(file)[0]
-		stats[date] = parsed
+		parsed        = json.loads(file_contents)
+		date          = os.path.splitext(file)[0]
+		stats[date]   = parsed
 	
 	return stats
 
@@ -33,7 +36,6 @@ def generate_site(stats):
 	file_loader   = FileSystemLoader('site/templates')
 	env           = Environment(loader=file_loader)
 	site_template = env.get_template('site.html')
-
 
 	last_two = sorted(list(dict.keys(stats)))[-2:]
 
@@ -47,6 +49,20 @@ def generate_site(stats):
 	IO.write_file(
 		os.path.join(Util.project_root(), 'site', 'index.html'),
 		site_template.render(summary=summary)
+	)
+
+
+def generate_js(stats):
+	totals    = generate_totals_json(stats)
+	breakdown = generate_breakdown_json(stats)
+
+	file_loader   = FileSystemLoader('site/templates')
+	env           = Environment(loader=file_loader)
+	js_template = env.get_template('site.js')
+
+	IO.write_file(
+		os.path.join(Util.project_root(), 'site', 'script.js'),
+		js_template.render(json={'totals': totals, 'breakdown': breakdown})
 	)
 
 
@@ -86,17 +102,14 @@ def generate_totals_json(stats):
 			idx = dataset_mapping[stat_type]
 			datasets[idx]['data'].append(stats[date]['totals'][stat_type])
 
-	IO.write_file(
-		os.path.join(Util.project_root(), 'site', 'json', 'totals.json'), 
-		json.dumps(
-			{
-				'datasets': datasets,
-				'labels': labels
-			},
-			sort_keys=True,
-			indent=2,
-			separators=(',', ': ')
-		)
+	return json.dumps(
+		{
+			'datasets': datasets,
+			'labels': labels
+		},
+		sort_keys=True,
+		indent=2,
+		separators=(',', ': ')
 	)
 
 
@@ -126,17 +139,14 @@ def generate_breakdown_json(stats):
 
 	datasets = list(datasets.values())
 
-	IO.write_file(
-		os.path.join(Util.project_root(), 'site', 'json', 'breakdown.json'), 
-		json.dumps(
-			{
-				'datasets': datasets,
-				'labels': labels
-			},
-			sort_keys=True,
-			indent=2,
-			separators=(',', ': ')
-		)
+	return json.dumps(
+		{
+			'datasets': datasets,
+			'labels': labels
+		},
+		sort_keys=True,
+		indent=2,
+		separators=(',', ': ')
 	)
 
 
@@ -144,10 +154,10 @@ def color_map(key):
 	mapping = {
 		# Breakdown
 		# Ordered approx by most cases
-		'Greater Glasgow and Clyde': '#a6cee3',
+		'Greater Glasgow and Clyde': '#33a02c',
 		'Lothian': '#1f78b4',
 		'Tayside': '#b2df8a',
-		'Lanarkshire': '#33a02c',
+		'Lanarkshire': '#a6cee3',
 		'Ayrshire and Arran': '#fb9a99',
 		'Fife': '#e31a1c',
 		'Forth Valley': '#fdbf6f',

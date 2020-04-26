@@ -1,10 +1,13 @@
 #!/usr/bin/env bash
 
-APP_ROOT=/code/SCOVID-19
+SCRIPTPATH="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+
+# Load the .env
+source "$SCRIPTPATH/.env"
 
 today=$(date +%Y-%m-%d)
 
-source "$APP_ROOT/venv/bin/activate"
-python3 "$APP_ROOT/bin/scrape.py" > "$APP_ROOT/data/${today}.json"
-python3 "$APP_ROOT/bin/site-gen.py"
+source "$PROJECT_ROOT/venv/bin/activate"
+python3 "$PROJECT_ROOT/bin/scrape.py" > "$PROJECT_ROOT/data/${today}.json"
+python3 "$PROJECT_ROOT/bin/site-gen.py"
 deactivate

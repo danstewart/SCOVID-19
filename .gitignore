@@ -5,3 +5,4 @@ site/*.json
 
 # Generated
 site/index.html
+site/script.js
