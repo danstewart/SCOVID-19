@@ -8,6 +8,7 @@ import sys
 sys.path.append(os.path.join(os.environ['PROJECT_ROOT'], 'lib'))
 
 import json
+import datetime
 import IO
 import Util
 from jinja2 import Environment, FileSystemLoader, Template
@@ -19,6 +20,7 @@ def main():
 	generate_site(stats)
 
 
+# Parses all the JSON files and turns them into one big dict
 def load_stats():
 	stats = {}
 	stat_dir = os.path.join(Util.project_root(), 'data')
@@ -32,18 +34,40 @@ def load_stats():
 	return stats
 
 
+# Generates the index.html from sites/templates/site.html
 def generate_site(stats):
 	file_loader   = FileSystemLoader('site/templates')
 	env           = Environment(loader=file_loader)
 	site_template = env.get_template('site.html')
 
-	last_two = sorted(list(dict.keys(stats)))[-2:]
+	days = sorted(stats.keys())
+	cases_breakdown = {}
+	deaths_breakdown = {}
+	prev_day = None
+
+	# Func 
+	calc_change = lambda dt, src: stats[dt]['totals'][src] if not prev_day else stats[dt]['totals'][src] - stats[prev_day]['totals'][src]
+
+	for date in days:
+		cases_breakdown[date] = calc_change(date, 'positive')
+		deaths_breakdown[date] = calc_change(date, 'died')
+		prev_day = date
+
+	day_with_most_cases  = max(cases_breakdown, key=cases_breakdown.get)
+	day_with_most_deaths = max(deaths_breakdown, key=deaths_breakdown.get)
+
+	to_dt      = lambda date: datetime.datetime.strptime(date, '%Y-%m-%d').date()
+	get_suffix = lambda day: 'th' if 11 <= day <=13 else { 1:'st', 2:'nd', 3:'rd' }.get(day % 10, 'th')
+	suffixify  = lambda day: str(day) + get_suffix(day)
+	nice_date  = lambda dt: dt.strftime('%B {day} %Y').replace('{day}', suffixify(dt.day))
 
 	summary = {
-		'total_cases':  stats[last_two[1]]['totals']['positive'],
-		'total_deaths': stats[last_two[1]]['totals']['died'],
-		'new_cases':    stats[last_two[1]]['totals']['positive'] - stats[last_two[0]]['totals']['positive'],
-		'new_deaths':   stats[last_two[1]]['totals']['died'] - stats[last_two[0]]['totals']['died'],
+		'total_cases':  stats[days[-1]]['totals']['positive'],
+		'total_deaths': stats[days[-1]]['totals']['died'],
+		'new_cases':    cases_breakdown[days[-1]],
+		'new_deaths':   deaths_breakdown[days[-1]],
+		'most_cases':   { 'date': nice_date(to_dt(day_with_most_cases)),  'total': cases_breakdown[day_with_most_cases] },
+		'most_deaths':  { 'date': nice_date(to_dt(day_with_most_deaths)), 'total': deaths_breakdown[day_with_most_deaths] }
 	}
 
 	IO.write_file(
@@ -52,6 +76,7 @@ def generate_site(stats):
 	)
 
 
+# Generates the script.js from sites/templates/site.js
 def generate_js(stats):
 	totals    = generate_totals_json(stats)
 	breakdown = generate_breakdown_json(stats)
@@ -66,6 +91,7 @@ def generate_js(stats):
 	)
 
 
+# Generates the totals JSON for generate_js()
 def generate_totals_json(stats):
 	dataset_mapping = { 'died': 0, 'negative': 1, 'positive': 2 }
 
@@ -113,6 +139,7 @@ def generate_totals_json(stats):
 	)
 
 
+# Generates the breakdown JSON for generate_js()
 def generate_breakdown_json(stats):
 	labels   = []
 	datasets = {}
@@ -150,6 +177,7 @@ def generate_breakdown_json(stats):
 	)
 
 
+# Maps each stats field to a color
 def color_map(key):
 	mapping = {
 		# Breakdown

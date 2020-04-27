@@ -25,6 +25,16 @@ function toggleData(e) {
 	init();
 }
 
+function toggleExtraStats(e) {
+	let moreStats = document.getElementById('moreStats');
+	let showing = Array.from(moreStats.classList).indexOf('is-hidden');
+	moreStats.classList.toggle('is-hidden');
+
+	e.children[0].classList.toggle('fa-chevron-up');
+	e.children[0].classList.toggle('fa-chevron-down');
+}
+
+// Chart logic
 function init() {
 	let chartConfig = [
 		{

@@ -9,6 +9,7 @@
 		<title>SCOVID-19</title>
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.1/css/bulma.min.css" />
 		<link rel="stylesheet" href="styles.css" />
+		<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
 	</head>
 
 	<body>
@@ -23,9 +24,6 @@
 							<!-- <p class="subtitle is-7 has-text-grey-lighter ">Last Updated: 2020-04-19 14:30</p> -->
 						</div>
 					</div>
-					<div class="level-right">
-						<a class="button is-small is-rounded" style="width: 110px;" onclick='toggleData(this)'>Show more data</a>
-					</div>
 				</div>
 			</div>
 		</section>
@@ -33,7 +31,7 @@
 		<hr>
 
 		<!-- Stats-->
-		<div class="columns">
+		<div id="stats" class="columns">
 			<div class="column">
 				<div class="tile is-parent">
 					<article class="has-text-centered tile is-child notification" style="background-color: #249596; color: white;">
@@ -68,26 +66,60 @@
 			</div>
 		</div>
 
+		<div id="moreStats" class="columns is-hidden">
+			<div class="column">
+				<div class="tile is-parent">
+					<article class="has-text-centered tile is-child notification" style="background-color: #469C6B; color: white;">
+						<p class="heading is-size-6">Most cases in one day</p>
+						<p id="totalCases" class="title is-marginless">{{ summary.most_cases.total }}</p>
+						<p class="heading is-size-6">On {{ summary.most_cases.date }}</p>
+					</article>
+				</div>
+			</div>
+			<div class="column">
+				<div class="tile is-parent">
+					<article class="has-text-centered tile is-child notification" style="background-color: #F87933; color: white;">
+						<p class="heading is-size-6">Most deaths in one day</p>
+						<p id="totalDeaths" class="title is-marginless">{{ summary.most_deaths.total }}</p>
+						<p class="heading is-size-6">On {{ summary.most_deaths.date }}</p>
+					</article>
+				</div>
+			</div>
+		</div>
+
+		<!-- More stats button -->
+		<div class="has-text-centered">
+			<a class="button is-text is-medium is-family-monospace" onclick="toggleExtraStats(this)">
+				<i class="fas fa-chevron-down"></i>
+			</a>
+		</div>
+
 		<hr>
 
 		<!-- Charts -->
 		<section class="section">
 			<div class="columns is-desktop">
 				<div class="column">
-					<p class="subtitle has-text-centered has-text-weight-semibold is-family-monospace">Cases by location</p>
+					<p class="heading is-size-5 has-text-centered has-text-weight-medium">Cases by location</p>
+					<br>
 					<!-- Cases by location -->
 					<div class="chart-container">
 						<canvas id="breakdownChart"></canvas>
 					</div>
 				</div>
 				<div class="column">
-					<p class="subtitle has-text-centered has-text-weight-semibold is-family-monospace">Cases across the country</p>
+					<p class="heading is-size-5 has-text-centered has-text-weight-medium">Cases across the country</p>
+					<br>
 					<div class="chart-container">
 						<canvas id="totalsChart"></canvas>
 					</div>
 				</div>
 			</div>
 		</section>
+		<div class="has-text-centered">
+			<a class="button is-rounded" style="width: 140px;" onclick='toggleData(this)'>Show more data</a>
+		</div>
+		<br>
 
 		<footer class="footer">
 			<div class="content has-text-centered">
