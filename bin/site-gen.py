@@ -11,6 +11,7 @@ import json
 import datetime
 import IO
 import Util
+from DT import DT
 from jinja2 import Environment, FileSystemLoader, Template
 
 
@@ -56,23 +57,18 @@ def generate_site(stats):
 	day_with_most_cases  = max(cases_breakdown, key=cases_breakdown.get)
 	day_with_most_deaths = max(deaths_breakdown, key=deaths_breakdown.get)
 
-	to_dt      = lambda date: datetime.datetime.strptime(date, '%Y-%m-%d').date()
-	get_suffix = lambda day: 'th' if 11 <= day <=13 else { 1:'st', 2:'nd', 3:'rd' }.get(day % 10, 'th')
-	suffixify  = lambda day: str(day) + get_suffix(day)
-	nice_date  = lambda dt: dt.strftime('%B {day} %Y').replace('{day}', suffixify(dt.day))
-
 	summary = {
 		'total_cases':  stats[days[-1]]['totals']['positive'],
 		'total_deaths': stats[days[-1]]['totals']['died'],
 		'new_cases':    cases_breakdown[days[-1]],
 		'new_deaths':   deaths_breakdown[days[-1]],
-		'most_cases':   { 'date': nice_date(to_dt(day_with_most_cases)),  'total': cases_breakdown[day_with_most_cases] },
-		'most_deaths':  { 'date': nice_date(to_dt(day_with_most_deaths)), 'total': deaths_breakdown[day_with_most_deaths] }
+		'most_cases':   { 'date': DT.from_date(day_with_most_cases).make_nice().nice,  'total': cases_breakdown[day_with_most_cases] },
+		'most_deaths':  { 'date': DT.from_date(day_with_most_deaths).make_nice().nice, 'total': deaths_breakdown[day_with_most_deaths] }
 	}
 
 	IO.write_file(
 		os.path.join(Util.project_root(), 'site', 'index.html'),
-		site_template.render(summary=summary)
+		site_template.render(summary=summary, last_updated=DT().make_nice('%B {day} %Y at %H:%M').nice)
 	)
 
 
