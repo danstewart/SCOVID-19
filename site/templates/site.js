@@ -27,11 +27,11 @@ function toggleData(e) {
 
 function toggleExtraStats(e) {
 	let moreStats = document.getElementById('moreStats');
-	let showing = Array.from(moreStats.classList).indexOf('is-hidden');
-	moreStats.classList.toggle('is-hidden');
+	let showing = Array.from(moreStats.classList).indexOf('closed');
 
 	e.children[0].classList.toggle('fa-chevron-up');
 	e.children[0].classList.toggle('fa-chevron-down');
+	moreStats.classList.toggle('closed');
 }
 
 // Chart logic
