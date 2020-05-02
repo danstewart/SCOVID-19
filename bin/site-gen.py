@@ -14,6 +14,7 @@ import Util
 from DT import DT
 from jinja2 import Environment, FileSystemLoader, Template
 
+template_dir = os.path.join(os.environ['PROJECT_ROOT'], 'site', 'templates')
 
 def main():
 	stats = load_stats()
@@ -37,7 +38,7 @@ def load_stats():
 
 # Generates the index.html from sites/templates/site.html
 def generate_site(stats):
-	file_loader   = FileSystemLoader('site/templates')
+	file_loader   = FileSystemLoader(template_dir)
 	env           = Environment(loader=file_loader)
 	site_template = env.get_template('site.html')
 
@@ -77,9 +78,9 @@ def generate_js(stats):
 	totals    = generate_totals_json(stats)
 	breakdown = generate_breakdown_json(stats)
 
-	file_loader   = FileSystemLoader('site/templates')
+	file_loader   = FileSystemLoader(template_dir)
 	env           = Environment(loader=file_loader)
-	js_template = env.get_template('site.js')
+	js_template   = env.get_template('site.js')
 
 	IO.write_file(
 		os.path.join(Util.project_root(), 'site', 'script.js'),

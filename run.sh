@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-SCRIPTPATH="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+[[ -z $PROJECT_ROOT ]] && PROJECT_ROOT="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 
 # Load the .env
-source "$SCRIPTPATH/.env"
+source "$PROJECT_ROOT/.env"
 
 today=$(date +%Y-%m-%d)
 

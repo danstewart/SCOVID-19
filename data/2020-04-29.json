@@ -1,0 +1,84 @@
+{
+  "breakdown": {
+    "Ayrshire and Arran": {
+      "cases": 745,
+      "in_hospital": 109,
+      "in_icu": 6
+    },
+    "Borders": {
+      "cases": 279,
+      "in_hospital": 37,
+      "in_icu": "<5"
+    },
+    "Dumfries and Galloway": {
+      "cases": 244,
+      "in_hospital": 32,
+      "in_icu": "<5"
+    },
+    "Eileanan Siar (Western Isles)": {
+      "cases": 6,
+      "in_hospital": "<5",
+      "in_icu": "<5"
+    },
+    "Fife": {
+      "cases": 712,
+      "in_hospital": 148,
+      "in_icu": 6
+    },
+    "Forth Valley": {
+      "cases": 717,
+      "in_hospital": 92,
+      "in_icu": 6
+    },
+    "Golden Jubilee National Hospital": {
+      "cases": "<5",
+      "in_hospital": "<5",
+      "in_icu": "<5"
+    },
+    "Grampian": {
+      "cases": 813,
+      "in_hospital": 104,
+      "in_icu": 10
+    },
+    "Greater Glasgow and Clyde": {
+      "cases": 2672,
+      "in_hospital": 555,
+      "in_icu": 42
+    },
+    "Highland": {
+      "cases": 236,
+      "in_hospital": 43,
+      "in_icu": "<5"
+    },
+    "Lanarkshire": {
+      "cases": 1329,
+      "in_hospital": 253,
+      "in_icu": 12
+    },
+    "Lothian": {
+      "cases": 1907,
+      "in_hospital": 254,
+      "in_icu": 17
+    },
+    "Orkney": {
+      "cases": 7,
+      "in_hospital": "<5",
+      "in_icu": "<5"
+    },
+    "Shetland": {
+      "cases": 54,
+      "in_hospital": "<5",
+      "in_icu": "<5"
+    },
+    "Tayside": {
+      "cases": 1313,
+      "in_hospital": 96,
+      "in_icu": "<5"
+    }
+  },
+  "totals": {
+    "died": 1415,
+    "negative": 42,
+    "positive": 11034
+  }
+}

@@ -23,7 +23,7 @@ pip install -r requirements.txt
 deactivate
 
 # Schedule
-(crontab -l 2>/dev/null; printf "5 15 * * * /code/SCOVID-19/run.sh") | uniq - | crontab -
+(crontab -l 2>/dev/null; printf "5 15 * * * export PROJECT_ROOT=/code/SCOVID-19 && /code/SCOVID-19/run.sh") | uniq - | crontab -
 ```
 
 ## Notes
