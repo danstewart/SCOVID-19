@@ -72,7 +72,7 @@ def get_totals(parsed, verbose = False):
 
 	totals = parsed.find(id='preamble').findAll('ul')[0].findAll('li')
 	for total in totals:
-		num = clean_int(clean_str(total.get_text()).split(' ')[0])
+		num = clean_int(re.search(r'(^\d+,?\s*\d+)', clean_str(total.get_text())).group(1))
 		stats.append(num)
 
 		if (verbose):

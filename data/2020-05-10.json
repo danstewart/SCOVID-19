@@ -1,18 +1,18 @@
 {
   "breakdown": {
     "Ayrshire and Arran": {
-      "cases": 745,
-      "in_hospital": 109,
-      "in_icu": 6
+      "cases": 904,
+      "in_hospital": 43,
+      "in_icu": 7
     },
     "Borders": {
-      "cases": 279,
-      "in_hospital": 37,
+      "cases": 286,
+      "in_hospital": 27,
       "in_icu": "<5"
     },
     "Dumfries and Galloway": {
-      "cases": 244,
-      "in_hospital": 32,
+      "cases": 255,
+      "in_hospital": "<5",
       "in_icu": "<5"
     },
     "Eileanan Siar (Western Isles)": {
@@ -21,14 +21,14 @@
       "in_icu": "<5"
     },
     "Fife": {
-      "cases": 712,
-      "in_hospital": 148,
-      "in_icu": 6
+      "cases": 811,
+      "in_hospital": 82,
+      "in_icu": "<5"
     },
     "Forth Valley": {
-      "cases": 717,
-      "in_hospital": 92,
-      "in_icu": 6
+      "cases": 828,
+      "in_hospital": 27,
+      "in_icu": "<5"
     },
     "Golden Jubilee National Hospital": {
       "cases": "<5",
@@ -36,29 +36,29 @@
       "in_icu": "<5"
     },
     "Grampian": {
-      "cases": 813,
-      "in_hospital": 104,
+      "cases": 1050,
+      "in_hospital": 92,
       "in_icu": 10
     },
     "Greater Glasgow and Clyde": {
-      "cases": 2672,
-      "in_hospital": 555,
-      "in_icu": 42
+      "cases": 3449,
+      "in_hospital": 492,
+      "in_icu": 29
     },
     "Highland": {
-      "cases": 236,
-      "in_hospital": 43,
+      "cases": 320,
+      "in_hospital": 9,
       "in_icu": "<5"
     },
     "Lanarkshire": {
-      "cases": 1329,
-      "in_hospital": 253,
-      "in_icu": 12
+      "cases": 1660,
+      "in_hospital": 113,
+      "in_icu": 7
     },
     "Lothian": {
-      "cases": 1907,
-      "in_hospital": 254,
-      "in_icu": 17
+      "cases": 2359,
+      "in_hospital": 200,
+      "in_icu": 11
     },
     "Orkney": {
       "cases": 7,
@@ -71,14 +71,14 @@
       "in_icu": "<5"
     },
     "Tayside": {
-      "cases": 1313,
-      "in_hospital": 96,
+      "cases": 1497,
+      "in_hospital": 41,
       "in_icu": "<5"
     }
   },
   "totals": {
-    "died": 1415,
-    "negative": 42048,
-    "positive": 11034
+    "died": 1857,
+    "negative": 59197,
+    "positive": 13486
   }
 }
