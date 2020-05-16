@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+# Takes the JSON from /data and generates the site from /site/templates
+
 from dotenv import load_dotenv
 load_dotenv()
 
