@@ -34,7 +34,7 @@ def load_stats():
 		parsed        = json.loads(file_contents)
 		date          = os.path.splitext(file)[0]
 		stats[date]   = parsed
-	
+
 	return stats
 
 
@@ -49,7 +49,7 @@ def generate_site(stats):
 	deaths_breakdown = {}
 	prev_day = None
 
-	# Func 
+	# Func
 	calc_change = lambda dt, src: stats[dt]['totals'][src] if not prev_day else stats[dt]['totals'][src] - stats[prev_day]['totals'][src]
 
 	for date in days:
@@ -71,14 +71,19 @@ def generate_site(stats):
 
 	IO.write_file(
 		os.path.join(Util.project_root(), 'site', 'index.html'),
-		site_template.render(summary=summary, last_updated=DT().make_nice('%B {day} %Y at %H:%M').nice)
+		site_template.render(
+			summary = summary,
+			last_updated = DT().make_nice('%B {day} %Y at %H:%M').nice
+		)
 	)
 
 
 # Generates the script.js from sites/templates/site.js
 def generate_js(stats):
-	totals    = generate_totals_json(stats)
-	breakdown = generate_breakdown_json(stats)
+	totals     = generate_totals_json(stats)
+	breakdown  = generate_breakdown_json(stats)
+	new_cases  = generate_new_cases_json(stats, 'positive')
+	new_deaths = generate_new_cases_json(stats, 'died')
 
 	file_loader   = FileSystemLoader(template_dir)
 	env           = Environment(loader=file_loader)
@@ -86,7 +91,12 @@ def generate_js(stats):
 
 	IO.write_file(
 		os.path.join(Util.project_root(), 'site', 'script.js'),
-		js_template.render(json={'totals': totals, 'breakdown': breakdown})
+		js_template.render(json = {
+			'totals': totals,
+			'breakdown': breakdown,
+			'newCases': new_cases,
+			'newDeaths': new_deaths
+		})
 	)
 
 
@@ -127,22 +137,17 @@ def generate_totals_json(stats):
 			idx = dataset_mapping[stat_type]
 			datasets[idx]['data'].append(stats[date]['totals'][stat_type])
 
-	return json.dumps(
-		{
-			'datasets': datasets,
-			'labels': labels
-		},
-		sort_keys=True,
-		indent=2,
-		separators=(',', ': ')
-	)
+	return Util.to_json({
+		'datasets': datasets,
+		'labels': labels
+	})
 
 
 # Generates the breakdown JSON for generate_js()
 def generate_breakdown_json(stats):
 	labels   = []
 	datasets = {}
-	
+
 	days_passed = 0
 	for date in sorted(dict.keys(stats)):
 		days_passed = days_passed + 1
@@ -152,6 +157,9 @@ def generate_breakdown_json(stats):
 			continue
 
 		for location in stats[date]['breakdown']:
+			if location == 'Golden Jubilee Nation Hospital':
+				continue
+
 			if location not in datasets:
 				datasets[location] = {
 					'backgroundColor': color_map(location),
@@ -165,16 +173,40 @@ def generate_breakdown_json(stats):
 
 	datasets = list(datasets.values())
 
-	return json.dumps(
-		{
-			'datasets': datasets,
-			'labels': labels
-		},
-		sort_keys=True,
-		indent=2,
-		separators=(',', ': ')
-	)
+	return Util.to_json({
+		'datasets': datasets,
+		'labels': labels
+	})
 
+def generate_new_cases_json(stats, type):
+	labels    = []
+	yesterday = 0
+
+	dataset = {
+		'backgroundColor': color_map(type),
+		'borderColor': color_map(type),
+		'data': [],
+		'fill': False,
+		'label': type.title()
+	}
+
+	for date in sorted(dict.keys(stats)):
+		if 'totals' not in stats[date]:
+			continue
+
+		if 'positive' not in stats[date]['totals']:
+			continue
+
+		new = stats[date]['totals'][type] - yesterday
+		yesterday += new
+
+		labels.append(date)
+		dataset['data'].append(new)
+
+	return Util.to_json({
+		'datasets': [ dataset ],
+		'labels': labels
+	})
 
 # Maps each stats field to a color
 def color_map(key):
@@ -195,7 +227,6 @@ def color_map(key):
 		'Shetland': '#b15928',
 		'Eileanan Siar (Western Isles)': '#66c2a5',
 		'Orkney': '#a6d854',
-		'Golden Jubilee National Hospital': '#b3b3b3',
 		# Totals
 		'died': '#b3b3b3',
 		'positive': '#ff7f00',

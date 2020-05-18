@@ -27,7 +27,6 @@ function toggleData(e) {
 
 function toggleExtraStats(e) {
 	let moreStats = document.getElementById('moreStats');
-	let showing = Array.from(moreStats.classList).indexOf('closed');
 
 	e.children[0].classList.toggle('fa-chevron-up');
 	e.children[0].classList.toggle('fa-chevron-down');
@@ -50,7 +49,17 @@ function init() {
 					chart.options.layout.padding.top = 42;
 					chart.update();
 				}
-			}
+			},
+		},
+		{
+			key: 'newCases',
+			id: 'newCasesChart',
+			type: 'bar'
+		},
+		{
+			key: 'newDeaths',
+			id: 'newDeathsChart',
+			type: 'bar'
 		}
 	];
 
@@ -65,7 +74,7 @@ function init() {
 
 		let context = document.getElementById(config.id);
 		let chart = new Chart(context, {
-			type: 'line',
+			type: config.type || 'line',
 			data: json,
 			options: {
 				maintainAspectRatio: false,
@@ -88,6 +97,8 @@ function getJSON(filename) {
 	let JSONs = {
 		breakdown: `{{ json.breakdown }}`,
 		totals: `{{ json.totals }}`,
+		newCases: `{{ json.newCases }}`,
+		newDeaths: `{{ json.newDeaths }}`,
 	};
 
 	return JSONs[filename];

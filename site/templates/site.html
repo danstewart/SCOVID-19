@@ -98,7 +98,24 @@
 		<section class="section">
 			<div class="columns is-desktop">
 				<div class="column">
-					<p class="heading is-size-5 has-text-centered has-text-weight-medium">Cases by location</p>
+					<p class="heading is-size-5 has-text-centered has-text-weight-medium">New cases per day</p>
+					<br>
+					<!-- Cases by location -->
+					<div class="chart-container">
+						<canvas id="newCasesChart"></canvas>
+					</div>
+				</div>
+				<div class="column">
+					<p class="heading is-size-5 has-text-centered has-text-weight-medium">New deaths per day</p>
+					<br>
+					<div class="chart-container">
+						<canvas id="newDeathsChart"></canvas>
+					</div>
+				</div>
+			</div>
+			<div class="columns is-desktop">
+				<div class="column">
+					<p class="heading is-size-5 has-text-centered has-text-weight-medium">Total cases by location</p>
 					<br>
 					<!-- Cases by location -->
 					<div class="chart-container">
@@ -106,7 +123,7 @@
 					</div>
 				</div>
 				<div class="column">
-					<p class="heading is-size-5 has-text-centered has-text-weight-medium">Cases across the country</p>
+					<p class="heading is-size-5 has-text-centered has-text-weight-medium">Total cases across the country</p>
 					<br>
 					<div class="chart-container">
 						<canvas id="totalsChart"></canvas>
