@@ -37,8 +37,8 @@ function toggleExtraStats(e) {
 function init() {
 	let chartConfig = [
 		{
-			key: 'breakdown',
-			id:  'breakdownChart',
+			key: 'location',
+			id:  'locationChart',
 		},
 		{
 			key: 'totals',
@@ -54,12 +54,20 @@ function init() {
 		{
 			key: 'newCases',
 			id: 'newCasesChart',
-			type: 'bar'
+			type: 'bar',
+			postFunc: (chart) => {
+				chart.data.datasets.forEach(set => { 
+					if (set.label == 'Negative') {
+						set.hidden = true;
+						chart.update();
+					}
+				})
+			}
 		},
 		{
-			key: 'newDeaths',
-			id: 'newDeathsChart',
-			type: 'bar'
+			key: 'breakdown',
+			id: 'breakdownChart',
+			type: 'doughnut',
 		}
 	];
 
@@ -79,6 +87,7 @@ function init() {
 			options: {
 				maintainAspectRatio: false,
 				responsive: true,
+				...config.options
 			}
 		});
 
@@ -95,10 +104,10 @@ function init() {
 // Fetch the JSON from the server
 function getJSON(filename) {
 	let JSONs = {
-		breakdown: `{{ json.breakdown }}`,
+		location: `{{ json.location }}`,
 		totals: `{{ json.totals }}`,
 		newCases: `{{ json.newCases }}`,
-		newDeaths: `{{ json.newDeaths }}`,
+		breakdown: `{{ json.breakdown }}`,
 	};
 
 	return JSONs[filename];

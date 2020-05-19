@@ -11,6 +11,10 @@
   }
 
   .slider { max-height: 180px; }
+
+  #sep {
+    height: 70px;
+  }
 }
 
 @media only screen and (max-width: 1000px) {

@@ -2,10 +2,14 @@
 
 # Scrape the gov.scot website for the latest COVID-19 stats and store them as JSON
 
+from dotenv import load_dotenv
+load_dotenv()
+
 import re
 import sys
 import json
 import requests
+from lib import Util
 from bs4 import BeautifulSoup
 
 URL='https://www.gov.scot/publications/coronavirus-covid-19-tests-and-cases-in-scotland/'
@@ -17,12 +21,7 @@ def main(verbose=False):
 	totals    = get_totals(parsed, verbose)
 	breakdown = get_cases_by_area(parsed, verbose)
 
-	print(json.dumps(
-		{ 'totals': totals, 'breakdown': breakdown },
-		sort_keys=True,
-		indent=2,
-		separators=(',', ': ')
-	))
+	print(Util.to_json({ 'totals': totals, 'breakdown': breakdown }))
 
 
 def clean_str(string):
@@ -43,7 +42,7 @@ def clean_int(string):
 
 
 def get_cases_by_area(parsed, verbose = False):
-	stats = {}
+	stats   = {}
 	mapping = [ 'cases', 'in_hospital', 'in_icu' ]
 
 	isHeader = True
