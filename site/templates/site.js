@@ -104,9 +104,9 @@ function init() {
 // Fetch the JSON from the server
 function getJSON(filename) {
 	let JSONs = {
-		location: `{{ json.location }}`,
-		totals: `{{ json.totals }}`,
-		newCases: `{{ json.newCases }}`,
+		location:  `{{ json.location }}`,
+		totals:    `{{ json.totals }}`,
+		newCases:  `{{ json.newCases }}`,
 		breakdown: `{{ json.breakdown }}`,
 	};
 
