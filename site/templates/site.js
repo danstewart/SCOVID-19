@@ -5,7 +5,10 @@ Chart.defaults.line.spanGaps = true;
 
 var charts = [];
 
-init();
+// Returns true if on mobile (or it should at least...)
+const isMobile = () => ((typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1));
+
+initCharts();
 
 // Event handlers
 function toggleData(e) {
@@ -22,9 +25,10 @@ function toggleData(e) {
 		limitDays = false;
 	}
 
-	init();
+	initCharts();
 }
 
+// Toggles the extra stat cards
 function toggleExtraStats(e) {
 	let moreStats = document.getElementById('moreStats');
 
@@ -33,8 +37,18 @@ function toggleExtraStats(e) {
 	moreStats.classList.toggle('closed');
 }
 
-// Chart logic
-function init() {
+// Chart initialisation
+function initCharts() {
+
+	const hideDataSet = (chart, setLabel) => {
+		chart.data.datasets.forEach(set => {
+			if (set.label == setLabel) {
+				set.hidden = true;
+				chart.update();
+			}
+		});
+	};
+
 	let chartConfig = [
 		{
 			key: 'location',
@@ -43,26 +57,13 @@ function init() {
 		{
 			key: 'totals',
 			id:  'totalsChart',
-			postFunc: (chart) => {
-				// HACK: If not mobile then add padding so this graph aligns with the other graph
-				if (!((typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1))) {
-					chart.options.layout.padding.top = 42;
-					chart.update();
-				}
-			},
+			options: { layout: { padding: { top: isMobile() ? 0 : 42 } } } // HACK: If not mobile then add padding so this graph aligns with the one to it's left
 		},
 		{
 			key: 'newCases',
 			id: 'newCasesChart',
 			type: 'bar',
-			postFunc: (chart) => {
-				chart.data.datasets.forEach(set => { 
-					if (set.label == 'Negative') {
-						set.hidden = true;
-						chart.update();
-					}
-				})
-			}
+			postFunc: (chart) => hideDataSet(chart, 'Negative'),
 		},
 		{
 			key: 'breakdown',
