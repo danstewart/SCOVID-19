@@ -103,12 +103,13 @@ def generate_js(stats):
 
 # Generates the totals JSON for generate_js()
 def generate_totals_json(stats):
-	chart = ChartData('died', 'negative', 'positive')
+	stat_types = ['died', 'negative', 'positive']
+	chart      = ChartData(*stat_types)
 
 	for date in sorted(dict.keys(stats)):
 		chart.add_label(date)
 
-		for stat_type in stats[date]['totals']:
+		for stat_type in stat_types:
 			chart.add_data(stats[date]['totals'][stat_type], stat_type)
 
 	return chart.as_json()
@@ -140,13 +141,14 @@ def generate_location_json(stats):
 
 
 def generate_new_cases_json(stats):
-	chart = ChartData('died', 'negative', 'positive')
-	yesterday = { 'died': 0, 'negative': 0, 'positive': 0 }
+	stat_types = ['died', 'negative', 'positive']
+	chart      = ChartData(*stat_types)
+	yesterday  = dict(zip(stat_types, [0] * len(stat_types)))
 
 	for date in sorted(dict.keys(stats)):
 		chart.add_label(date)
 
-		for stat_type in stats[date]['totals']:
+		for stat_type in stat_types:
 			new = stats[date]['totals'][stat_type] - yesterday[stat_type]
 			yesterday[stat_type] += new
 
@@ -156,11 +158,11 @@ def generate_new_cases_json(stats):
 
 # TODO: Change to use ChartData
 def generate_breakdown_json(stats):
-	chart = PieChart()
+	stat_types = ['died', 'negative', 'positive']
+	chart      = PieChart()
+	today      = sorted(dict.keys(stats))[-1]
 
-	today = sorted(dict.keys(stats))[-1]
-
-	for stat_type in stats[today]['totals']:
+	for stat_type in stat_types:
 		chart.create(stat_type)
 		chart.add_label(stat_type.title())
 		chart.add_data(stats[today]['totals'][stat_type])

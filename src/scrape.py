@@ -67,10 +67,15 @@ def get_cases_by_area(parsed, verbose = False):
 
 def get_totals(parsed, verbose = False):
 	stats = []
-	mapping = [ 'negative', 'positive', 'died' ]
+
+	# NOTE
+	# discharged is since March 5th
+	# in_hospital is how many last night
+	mapping = [ 'negative', 'positive', 'discharged', 'in_hospital', 'died' ]
 
 	totals = parsed.find(id='preamble').findAll('ul')[0].findAll('li')
-	for total in totals:
+	other_totals = parsed.find(id='preamble').findAll('ul')[1].findAll('li')
+	for total in totals + other_totals:
 		num = clean_int(re.search(r'(^\d+,?\s*\d+)', clean_str(total.get_text())).group(1))
 		stats.append(num)
 
