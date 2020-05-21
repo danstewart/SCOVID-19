@@ -1,69 +1,76 @@
-// Configuration
-let limitDays = true;
-const DEFAULT_DAYS = 21;
+// Global ChartJS Configuration
 Chart.defaults.line.spanGaps = true;
 
+// All of the charts
 let charts = {};
 
+/*
+* Helpers
+*/
 // Returns true if on mobile (or it should at least...)
 const isMobile = () => ((typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1));
 
-// Data Range Togglers
-const groupedToggle = (chartKey) => {
-	let chart = charts[chartKey];
-	
-	let json = JSON.parse(getJSON(chartKey));
+/* 
+* Data range mutators 
+*/
+// Converts a dataset from daily points to weekly points
+const everyXdays = (data, daysBetween = undefined) => {
+	if (daysBetween == undefined) {
+		const magicNumber = 18; // The magic disvisor to make the graph look decent, just a guess
+		const totalDays = data.labels.length;
+		daysBetween = Math.floor(totalDays / magicNumber);
+	}
 
-	if (!chart.toggleOn) {
-		const everyX = 7;
+	data.datasets.forEach(set => {
+		let counter       = 0;
+		let newDataPoints = [];
 
-		json.datasets.forEach(set => {
-			let counter       = 0;
-			let newDataPoints = [];
-
-			set.data.forEach(data => {
-				if (counter == 0 || (counter % everyX == 0)) {
-					newDataPoints.push(data);
-				}
-
-				counter++;
-			});
-
-			set.data = newDataPoints;
+		set.data.forEach(data => {
+			if (counter == 0 || (counter % daysBetween == 0)) {
+				newDataPoints.push(data);
+			}
+			counter++;
 		});
 
-		json.labels = json.labels.filter((_, idx) => (idx == 0 || idx % everyX == 0));
-	}
+		set.data = newDataPoints;
+	});
 
-	chart.toggleOn = !chart.toggleOn;
-	chart.data = json;
-	chart.update();
+	data.labels = data.labels.filter((_, idx) => (idx == 0 || idx % daysBetween == 0));
 };
 
-const lastXdaysToggle = (chartKey) => {
+// Converts a dataset to just have the last $days worth of data
+const lastXdays = (data, days = 21) => {
+	data.datasets.forEach(set => set.data = set.data.slice(-days));
+	data.labels = data.labels.slice(-days);
+};
+
+// Wrapper to call
+const toggleChartDataSet = (chartKey) => {
 	let chart = charts[chartKey];
-	const days = 21;
+	if (!chart.dataMutatorFn) return;
 
-	let json = JSON.parse(getJSON(chartKey));
-
-	if (!chart.toggleOn) {
-		json.datasets.forEach(set => set.data = set.data.slice(-days));
-		json.labels = json.labels.slice(-days);
+	if (chart.toggleOn) {
+		chart.data = JSON.parse(getJSON(chartKey));
+	} else {
+		chart.dataMutatorFn(chart.data);
 	}
 
 	chart.toggleOn = !chart.toggleOn;
-	chart.data = json;
 	chart.update();
 };
 
+// Draw the charts for the first time
 initCharts();
 
-// Event handlers
+/*
+* Event handlers
+*/
+// Toggles between showing all data on the chart or the smaller dataset
 function toggleData(e) {
 	let on = e.innerHTML == 'Show less data';
 
 	// Run toggles on each chart
-	Object.keys(charts).forEach(key => toggleDataDurations(key));
+	Object.keys(charts).forEach(key => toggleChartDataSet(key));
 
 	if (on) {
 		e.innerHTML = "Show more data";
@@ -74,16 +81,8 @@ function toggleData(e) {
 	}
 }
 
-function toggleDataDurations(chartKey) {
-	if (!charts) return;
-
-	if (charts[chartKey] && charts[chartKey].toggler) {
-		charts[chartKey].toggler(chartKey);
-	}
-}
-
 // Toggles the extra stat cards
-function toggleExtraStats(e) {
+function toggleExtraCards(e) {
 	let moreStats = document.getElementById('moreStats');
 
 	e.children[0].classList.toggle('fa-chevron-up');
@@ -91,61 +90,64 @@ function toggleExtraStats(e) {
 	moreStats.classList.toggle('closed');
 }
 
-// Chart initialisation
+/*
+* Charts
+*/
+// Chart config parsing
 function initCharts() {
 	let chartConfig = [
 		{
 			key: 'location',
-			id:  'locationChart',
-			rangeToggle: groupedToggle,
+			htmlId: 'locationChart',
+			dataMutatorFn: everyXdays,
 		},
 		{
 			key: 'totals',
-			id:  'totalsChart',
+			htmlId: 'totalsChart',
 			options: { layout: { padding: { top: isMobile() ? 0 : 42 } } }, // HACK: If not mobile then add padding so this graph aligns with the one to it's left
-			rangeToggle: groupedToggle,
+			dataMutatorFn: everyXdays,
 		},
 		{
 			key: 'newCases',
-			id: 'newCasesChart',
+			htmlId: 'newCasesChart',
 			type: 'bar',
-			toHide: ['Negative'],
-			rangeToggle: lastXdaysToggle,
+			hiddenByDefault: ['Negative'],
+			dataMutatorFn: lastXdays,
 		},
 		{
 			key: 'breakdown',
-			id: 'breakdownChart',
+			htmlId: 'breakdownChart',
 			type: 'doughnut',
 		}
 	];
 
 	// Generate charts
 	chartConfig.forEach(config => {
-		let json = JSON.parse(getJSON(config.key));
+		let data = JSON.parse(getJSON(config.key));
+		if (config.dataMutatorFn) config.dataMutatorFn(data);
 
-		chart = drawChart(config, json);
+		chart = makeChart(config, data);
+		chart.toggleOn = true;
 
 		charts[config.key] = chart;
 		if (config.postFunc) config.postFunc(chart);
-		if (chart.toggler) chart.toggler(config.key)
 	});
-
-	// TODO: Add buttons to change dates
-	// breakdownChart.data.datasets[0].data.pop();
-	// breakdownChart.data.labels.pop();
-	// breakdownChart.update();
 }
 
-function drawChart(config, data) {
-	if (config.toHide) {
+// Instantiates the Chart()
+function makeChart(config, data) {
+	// TODO: Improve
+	if (config.hiddenByDefault) {
 		data.datasets.forEach(set => {
-			config.toHide.forEach(label => {
-				if (set.label == label) set.hidden = true;
+			config.hiddenByDefault.forEach(label => {
+				if (set.label == label) {
+					set.hidden = true;
+				}
 			});
 		});
 	}
 
-	let context = document.getElementById(config.id);
+	let context = document.getElementById(config.htmlId);
 	let chart = new Chart(context, {
 		type: config.type || 'line',
 		data: data,
@@ -156,12 +158,14 @@ function drawChart(config, data) {
 		}
 	});
 
-	chart.toggler = config.rangeToggle;
+	// Put in some of the things we need later
+	chart.dataMutatorFn = config.dataMutatorFn;
 
 	return chart;
 }
 
-// Fetch the JSON from the server
+// Return the appropriate JSON
+// Automatically generated server side
 function getJSON(filename) {
 	let JSONs = {
 		location:  `{{ json.location }}`,
