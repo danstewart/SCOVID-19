@@ -32,7 +32,7 @@
 		<hr>
 
 		<!-- Stats-->
-		<div id="stats" class="columns">
+		<section id="stats" class="columns">
 			<div class="column">
 				<div class="tile is-parent">
 					<article class="has-text-centered tile is-child notification" style="background-color: #249596; color: white;">
@@ -65,9 +65,9 @@
 					</article>
 				</div>
 			</div>
-		</div>
+		</section>
 
-		<div id="moreStats" class="columns slider closed">
+		<section id="moreStats" class="columns slider closed">
 			<div class="column">
 				<div class="tile is-parent">
 					<article class="has-text-centered tile is-child notification" style="background-color: #469C6B; color: white;">
@@ -86,7 +86,7 @@
 					</article>
 				</div>
 			</div>
-		</div>
+		</section>
 
 		<!-- More stats button -->
 		<div class="has-text-centered">
@@ -102,7 +102,11 @@
 			<div class="columns is-desktop">
 				<div class="column">
 					<p class="heading is-size-5 has-text-centered has-text-weight-medium">New cases per day</p>
+					<div class="buttons is-centered">
+						<button class="button is-text is-small" onclick="toggleData(this, 'newCases')">Show more</button>
+					</div>
 					<br>
+
 					<!-- Cases by location -->
 					<div class="chart-container">
 						<canvas id="newCasesChart"></canvas>
@@ -110,6 +114,11 @@
 				</div>
 				<div class="column">
 					<p class="heading is-size-5 has-text-centered has-text-weight-medium">Breakdown</p>
+					<!-- I mean... why dick around with CSS when invisible elements do the trick-->
+					<!-- Screen readers are probably why, I'll learn accessibility one day -->
+					<div class="buttons is-centered">
+						<button class="button is-text is-small" disabled style="pointer-events: none"></button>
+					</div>
 					<br>
 					<div class="chart-container">
 						<canvas id="breakdownChart"></canvas>
@@ -120,6 +129,9 @@
 			<div class="columns is-desktop">
 				<div class="column">
 					<p class="heading is-size-5 has-text-centered has-text-weight-medium">Total cases by location</p>
+					<div class="buttons is-centered">
+						<button class="button is-text is-small" onclick="toggleData(this, 'location')">Show more</button>
+					</div>
 					<br>
 					<!-- Cases by location -->
 					<div class="chart-container">
@@ -128,6 +140,9 @@
 				</div>
 				<div class="column">
 					<p class="heading is-size-5 has-text-centered has-text-weight-medium">Total cases across the country</p>
+					<div class="buttons is-centered">
+						<button class="button is-text is-small" onclick="toggleData(this, 'totals')">Show more</button>
+					</div>
 					<br>
 					<div class="chart-container">
 						<canvas id="totalsChart"></canvas>
@@ -135,9 +150,7 @@
 				</div>
 			</div>
 		</section>
-		<div class="has-text-centered">
-			<a class="button is-rounded" style="width: 140px;" onclick='toggleData(this)'>Show more data</a>
-		</div>
+
 		<br>
 
 		<footer class="footer">

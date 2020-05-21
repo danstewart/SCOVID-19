@@ -66,18 +66,15 @@ initCharts();
 * Event handlers
 */
 // Toggles between showing all data on the chart or the smaller dataset
-function toggleData(e) {
-	let on = e.innerHTML == 'Show less data';
+function toggleData(e, chartKey) {
+	let on = e.innerHTML == 'Show less';
 
-	// Run toggles on each chart
-	Object.keys(charts).forEach(key => toggleChartDataSet(key));
+	toggleChartDataSet(chartKey);
 
 	if (on) {
-		e.innerHTML = "Show more data";
-		limitDays = true;
+		e.innerHTML = 'Show more';
 	} else {
-		e.innerHTML = "Show less data";
-		limitDays = false;
+		e.innerHTML = 'Show less';
 	}
 }
 
