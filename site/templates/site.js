@@ -63,8 +63,7 @@ function toggleData(e) {
 	let on = e.innerHTML == 'Show less data';
 
 	// Run toggles on each chart
-	// TODO: This doesn't work properly, the old data and new data conflict...
-	Object.keys(charts).forEach(key => { console.log(key);toggleDataDurations(key)});
+	Object.keys(charts).forEach(key => toggleDataDurations(key));
 
 	if (on) {
 		e.innerHTML = "Show more data";
@@ -73,8 +72,6 @@ function toggleData(e) {
 		e.innerHTML = "Show less data";
 		limitDays = false;
 	}
-
-	initCharts();
 }
 
 function toggleDataDurations(chartKey) {
