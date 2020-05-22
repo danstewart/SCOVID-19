@@ -8,13 +8,12 @@
     position: relative;
     height: 60vh;
     width: 45vw;
+    margin-bottom: 30px;
   }
 
   .slider { max-height: 180px; }
 
-  #sep {
-    height: 70px;
-  }
+  #sep { height: 70px; }
 }
 
 @media only screen and (max-width: 1000px) {
@@ -22,9 +21,12 @@
     position: relative;
     height: 60vh;
     width: 85vw;
+    margin-bottom: 100px;
   }
 
   .slider { max-height: 400px; }
+
+  .hidden-on-mobile { display: none !important; }
 }
 
 /* https://davidwalsh.name/css-slide */
@@ -37,4 +39,12 @@
 
 .slider.closed {
   max-height: 0;
+}
+
+.data-toggle {
+  margin-bottom: -10px !important;
+}
+
+.chart-container {
+  margin-top: -30px !important;
 }

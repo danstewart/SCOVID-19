@@ -103,7 +103,7 @@
 				<div class="column">
 					<p class="heading is-size-5 has-text-centered has-text-weight-medium">New cases per day</p>
 					<div class="buttons is-centered">
-						<button class="button is-text is-small" onclick="toggleData(this, 'newCases')">Show more</button>
+						<button class="button is-text is-small data-toggle" onclick="toggleData(this, 'newCases')">Show more</button>
 					</div>
 					<br>
 
@@ -115,8 +115,8 @@
 				<div class="column">
 					<p class="heading is-size-5 has-text-centered has-text-weight-medium">Breakdown</p>
 					<!-- I mean... why dick around with CSS when invisible elements do the trick-->
-					<div class="buttons is-centered">
-						<button aria-hidden="true" class="button is-text is-small" disabled style="pointer-events: none"></button>
+					<div class="buttons is-centered hidden-on-mobile">
+						<button aria-hidden="true" class="button is-text is-small data-toggle" disabled style="pointer-events: none"></button>
 					</div>
 					<br>
 					<div class="chart-container">
@@ -129,7 +129,7 @@
 				<div class="column">
 					<p class="heading is-size-5 has-text-centered has-text-weight-medium">Total cases by location</p>
 					<div class="buttons is-centered">
-						<button class="button is-text is-small" onclick="toggleData(this, 'location')">Show more</button>
+						<button class="button is-text is-small data-toggle" onclick="toggleData(this, 'location')">Show more</button>
 					</div>
 					<br>
 					<!-- Cases by location -->
@@ -140,7 +140,7 @@
 				<div class="column">
 					<p class="heading is-size-5 has-text-centered has-text-weight-medium">Total cases across the country</p>
 					<div class="buttons is-centered">
-						<button class="button is-text is-small" onclick="toggleData(this, 'totals')">Show more</button>
+						<button class="button is-text is-small data-toggle" onclick="toggleData(this, 'totals')">Show more</button>
 					</div>
 					<br>
 					<div class="chart-container">
