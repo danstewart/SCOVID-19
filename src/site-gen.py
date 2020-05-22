@@ -122,18 +122,19 @@ def generate_location_json(stats):
 	days_passed = 0
 
 	for date in sorted(dict.keys(stats)):
-		days_passed = days_passed + 1
 		chart.add_label(date)
+		days_passed = days_passed + 1
 
 		if 'breakdown' not in stats[date]:
 			continue
 
 		for location in stats[date]['breakdown']:
-			if location == 'Golden Jubilee Nation Hospital':
+			# Ignore this - it's always <5
+			if location == 'Golden Jubilee National Hospital':
 				continue
 
 			if chart.create(location):
-				chart.add_data([0] * days_passed, location)
+				chart.add_data([0] * (days_passed - 1), location)
 
 			chart.add_data(stats[date]['breakdown'][location]['cases'], location)
 
