@@ -48,3 +48,9 @@
 .chart-container {
   margin-top: -30px !important;
 }
+
+/*
+* For some reason the stats and moreStats columns are wider than the page
+* https://github.com/jgthms/bulma/issues/449
+*/
+body, html { overflow-x: hidden; }
