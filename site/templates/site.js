@@ -10,8 +10,8 @@ let charts = {};
 // Returns true if on mobile (or it should at least...)
 const isMobile = () => ((typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1));
 
-/* 
-* Data range mutators 
+/*
+* Data range mutators
 */
 // Converts a dataset from daily points to weekly points
 const everyXdays = (data, daysBetween = undefined) => {
@@ -21,21 +21,26 @@ const everyXdays = (data, daysBetween = undefined) => {
 		daysBetween = Math.floor(totalDays / magicNumber);
 	}
 
-	data.datasets.forEach(set => {
-		let counter       = 0;
-		let newDataPoints = [];
+	// Takes on every X element but starting from the end
+	const reducer = (data) => {
+		let newData = new Array();
 
-		set.data.forEach(data => {
-			if (counter == 0 || (counter % daysBetween == 0)) {
-				newDataPoints.push(data);
+		for (let i = 0; i < data.length; i++) {
+			if (i == 0 || i % daysBetween == 0) {
+				let from = 0 - (i + 1)
+				let to = i == 0 ? undefined : from + 1; // If slicing -1 we don't want a `to` param
+				newData.unshift(data.slice(from, to));
 			}
-			counter++;
-		});
+		}
 
-		set.data = newDataPoints;
+		return newData;
+	};
+
+	data.datasets.forEach(set => {
+		set.data = reducer(set.data);
 	});
 
-	data.labels = data.labels.filter((_, idx) => (idx == 0 || idx % daysBetween == 0));
+	data.labels = reducer(data.labels);
 };
 
 // Converts a dataset to just have the last $days worth of data
