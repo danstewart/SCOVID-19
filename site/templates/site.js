@@ -1,8 +1,15 @@
-// Global ChartJS Configuration
-Chart.defaults.line.spanGaps = true; 
-
 // All of the charts
 let charts = {};
+
+// Global ChartJS Configuration
+Chart.defaults.line.spanGaps = true;
+
+const original = Chart.defaults.global.legend.onClick;
+Chart.defaults.global.legend.onClick = function(e, legendItem) {
+	charts[this.chart.key].hidden[legendItem.text] = !legendItem.hidden;
+	original.call(this, e, legendItem);
+};
+
 
 /*
 * Helpers
@@ -55,7 +62,8 @@ const toggleChartDataSet = (chartKey) => {
 	if (!chart.dataMutatorFn) return;
 
 	if (chart.toggleOn) {
-		chart.data = JSON.parse(getJSON(chartKey));
+		chart.data = getData(chartKey);
+
 	} else {
 		chart.dataMutatorFn(chart.data);
 	}
@@ -66,6 +74,7 @@ const toggleChartDataSet = (chartKey) => {
 
 // Draw the charts for the first time
 initCharts();
+
 
 /*
 * Event handlers
@@ -92,6 +101,7 @@ function toggleExtraCards(e) {
 	moreStats.classList.toggle('closed');
 }
 
+
 /*
 * Charts
 */
@@ -113,7 +123,7 @@ function initCharts() {
 			key: 'newCases',
 			htmlId: 'newCasesChart',
 			type: 'bar',
-			hiddenByDefault: ['Negative'],
+			hidden: { 'Negative': true },
 			dataMutatorFn: lastXdays,
 		},
 		{
@@ -125,7 +135,14 @@ function initCharts() {
 
 	// Generate charts
 	chartConfig.forEach(config => {
-		let data = JSON.parse(getJSON(config.key));
+		// Bit of a hack so that if we want anything hidden by default
+		// then getData() will pick it up
+		if (config.hidden) {
+			charts[config.key] = {};
+			charts[config.key].hidden = config.hidden;
+		}
+
+		let data = getData(config.key);
 		if (config.dataMutatorFn) config.dataMutatorFn(data);
 
 		chart = makeChart(config, data);
@@ -138,17 +155,6 @@ function initCharts() {
 
 // Instantiates the Chart()
 function makeChart(config, data) {
-	// TODO: Improve
-	if (config.hiddenByDefault) {
-		data.datasets.forEach(set => {
-			config.hiddenByDefault.forEach(label => {
-				if (set.label == label) {
-					set.hidden = true;
-				}
-			});
-		});
-	}
-
 	let context = document.getElementById(config.htmlId);
 	let chart = new Chart(context, {
 		type: config.type || 'line',
@@ -162,13 +168,15 @@ function makeChart(config, data) {
 
 	// Put in some of the things we need later
 	chart.dataMutatorFn = config.dataMutatorFn;
+	chart.key = config.key;
+	chart.hidden = config.hidden || {};
 
 	return chart;
 }
 
-// Return the appropriate JSON
+// Return the appropriate data for this chart
 // Automatically generated server side
-function getJSON(filename) {
+function getData(chartKey) {
 	let JSONs = {
 		location:  `{{ json.location }}`,
 		totals:    `{{ json.totals }}`,
@@ -176,5 +184,18 @@ function getJSON(filename) {
 		breakdown: `{{ json.breakdown }}`,
 	};
 
-	return JSONs[filename];
+	let data = JSON.parse(JSONs[chartKey]);
+
+	// Figure out which sets should be hidden
+	if (charts && charts[chartKey] && charts[chartKey].hidden) {
+		data.datasets.forEach(set => {
+			Object.keys(charts[chartKey].hidden).forEach(label => {
+				if (charts[chartKey].hidden[label] && set.label == label) {
+					set.hidden = true;
+				}
+			});
+		});
+	}
+
+	return data;
 }
