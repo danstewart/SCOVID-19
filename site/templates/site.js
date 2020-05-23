@@ -1,5 +1,5 @@
 // Global ChartJS Configuration
-Chart.defaults.line.spanGaps = true;
+Chart.defaults.line.spanGaps = true; 
 
 // All of the charts
 let charts = {};
@@ -21,15 +21,15 @@ const everyXdays = (data, daysBetween = undefined) => {
 		daysBetween = Math.floor(totalDays / magicNumber);
 	}
 
-	// Takes on every X element but starting from the end
+	// Takes every X element but starting from the end
 	const reducer = (data) => {
 		let newData = new Array();
+		let dataLength = data.length;
 
-		for (let i = 0; i < data.length; i++) {
+		for (let i = 0; i < dataLength; i++) {
 			if (i == 0 || i % daysBetween == 0) {
-				let from = 0 - (i + 1)
-				let to = i == 0 ? undefined : from + 1; // If slicing -1 we don't want a `to` param
-				newData.unshift(data.slice(from, to));
+				let idx = dataLength - (i + 1);
+				newData.unshift(data[idx]);
 			}
 		}
 
