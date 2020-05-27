@@ -112,7 +112,7 @@ def generate_totals_json(stats):
 		for stat_type in stat_types:
 			chart.add_data(stats[date]['totals'][stat_type], stat_type)
 
-	return chart.as_json()
+	return chart.as_json(min=True)
 
 
 # Generates the breakdown JSON for generate_js()
@@ -138,7 +138,7 @@ def generate_location_json(stats):
 
 			chart.add_data(stats[date]['breakdown'][location]['cases'], location)
 
-	return chart.as_json()
+	return chart.as_json(min=True)
 
 
 def generate_new_cases_json(stats):
@@ -155,7 +155,7 @@ def generate_new_cases_json(stats):
 
 			chart.add_data(new, stat_type)
 
-	return chart.as_json()
+	return chart.as_json(min=True)
 
 # TODO: Change to use ChartData
 def generate_breakdown_json(stats):
@@ -168,6 +168,6 @@ def generate_breakdown_json(stats):
 		chart.add_label(stat_type.title())
 		chart.add_data(stats[today]['totals'][stat_type])
 
-	return chart.as_json()
+	return chart.as_json(min=True)
 
 main()

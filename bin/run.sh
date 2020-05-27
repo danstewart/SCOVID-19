@@ -11,3 +11,5 @@ source "$PROJECT_ROOT/venv/bin/activate"
 python3 "$PROJECT_ROOT/src/scrape.py" > "$PROJECT_ROOT/data/${today}.json"
 python3 "$PROJECT_ROOT/src/site-gen.py"
 deactivate
+
+terser --compress --mangle --output "$PROJECT_ROOT/site/script.js" -- "$PROJECT_ROOT/site/script.js"

@@ -49,11 +49,8 @@ class ChartData(object):
 
 
 	# Formatters
-	def as_json(self):
-		return Util.to_json({
-			'labels': self.labels,
-			'datasets': self.data
-		})
+	def as_json(self, min=False):
+		return Util.to_json({ 'labels': self.labels, 'datasets': self.data }, min)
 
 
 	@staticmethod

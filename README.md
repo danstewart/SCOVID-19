@@ -3,6 +3,9 @@
 # Bootstrap
 [[ -f /bootstrapped ]] || bash <(curl -s https://raw.githubusercontent.com/danstewart/server-bootstrap/master/bootstrap.sh)
 
+# System dependencies
+sudo npm install terser -g
+
 # Link
 sudo ln -s $(pwd)/site/ /data/www/scovid19.xyz
 
