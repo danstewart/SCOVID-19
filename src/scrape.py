@@ -73,8 +73,8 @@ def get_totals(parsed, verbose = False):
 	# in_hospital is how many last night
 	mapping = [ 'negative', 'positive', 'discharged', 'in_hospital', 'died' ]
 
-	totals = parsed.find(id='preamble').findAll('ul')[0].findAll('li')
-	other_totals = parsed.find(id='preamble').findAll('ul')[1].findAll('li')
+	totals = parsed.find(id='preamble').findAll('ul')[1].findAll('li')
+	other_totals = parsed.find(id='preamble').findAll('ul')[2].findAll('li')
 	for total in totals + other_totals:
 		num = clean_int(re.search(r'(^\d+,?\s*\d+)', clean_str(total.get_text())).group(1))
 		stats.append(num)
