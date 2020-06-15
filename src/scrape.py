@@ -21,7 +21,10 @@ def main(verbose=False):
 	totals    = get_totals(parsed, verbose)
 	breakdown = get_cases_by_area(parsed, verbose)
 
-	print(Util.to_json({ 'totals': totals, 'breakdown': breakdown }))
+	if not breakdown:
+		print(Util.to_json({ 'totals': totals }))
+	else:
+		print(Util.to_json({ 'totals': totals, 'breakdown': breakdown }))
 
 
 def clean_str(string):
@@ -45,6 +48,8 @@ def get_cases_by_area(parsed, verbose = False):
 	stats   = {}
 	mapping = [ 'cases', 'in_hospital', 'in_icu' ]
 
+	got_stats = False
+
 	isHeader = True
 	table = parsed.find('table')
 	for row in table.findAll('tr'):
@@ -59,8 +64,15 @@ def get_cases_by_area(parsed, verbose = False):
 		stat  = dict(zip(mapping, cells))
 		stats[key] = stat
 
+
+		if stat['cases'] > 0:
+			got_stats = True
+
 		if (verbose):
 			print('{} has {} cases, {} in hospital and {} in the ICU'.format(key, *stat.values()))
+
+	if not got_stats:
+		return False
 
 	return stats
 
@@ -78,10 +90,16 @@ def get_totals(parsed, verbose = False):
 
 	for total in totals + other_totals:
 		matches = re.search(r'(^\d+,?\.?\s*\d+)', clean_str(total.get_text()))
+		# rtc = re.search(r'\(of which (\d+,?\.?\s*\d+)', clean_str(total.get_text()))
+
 		if not matches:
 			continue
 
 		num = clean_int(matches.group(1))
+
+		# if rtc:
+			# num -= clean_int(rtc.group(1))
+
 		stats.append(num)
 
 		if (verbose):
