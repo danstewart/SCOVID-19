@@ -58,6 +58,10 @@ def generate_site(stats):
 		deaths_breakdown[date] = calc_change(date, 'died')
 		prev_day = date
 
+		# The reporting changed on this day and causes a huge spike
+		if date == '2020-06-15':
+			cases_breakdown[date] = 0
+
 	day_with_most_cases  = max(cases_breakdown, key=cases_breakdown.get)
 	day_with_most_deaths = max(deaths_breakdown, key=deaths_breakdown.get)
 
@@ -120,23 +124,32 @@ def generate_location_json(stats):
 
 	chart = ChartData()
 	days_passed = 0
+	to_pad = 0
 
 	for date in sorted(dict.keys(stats)):
 		chart.add_label(date)
-		days_passed = days_passed + 1
+		days_passed += 1
 
 		if 'breakdown' not in stats[date]:
+			to_pad += 1
 			continue
 
 		for location in stats[date]['breakdown']:
 			# Ignore this - it's always <5
 			if location == 'Golden Jubilee National Hospital':
 				continue
-
+			
+			# If new set
 			if chart.create(location):
 				chart.add_data([0] * (days_passed - 1), location)
 
-			chart.add_data(stats[date]['breakdown'][location]['cases'], location)
+			total = stats[date]['breakdown'][location]['cases']
+			if to_pad > 1:
+				chart.add_data([total] * (to_pad - 1), location)
+
+			chart.add_data(total, location)
+
+		to_pad = 0 # reset
 
 	return chart.as_json(min=True)
 
@@ -153,11 +166,14 @@ def generate_new_cases_json(stats):
 			new = stats[date]['totals'][stat_type] - yesterday[stat_type]
 			yesterday[stat_type] += new
 
+			if date == '2020-06-15':
+				new = 0
+
 			chart.add_data(new, stat_type)
 
 	return chart.as_json(min=True)
 
-# TODO: Change to use ChartData
+
 def generate_breakdown_json(stats):
 	stat_types = ['died', 'negative', 'positive']
 	chart      = PieChart()

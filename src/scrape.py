@@ -60,6 +60,9 @@ def get_cases_by_area(parsed, verbose = False):
 		cells = row.findAll('td')
 		cells = list(map(clean_str, [c.get_text() for c in cells]))
 		key   = cells.pop(0)
+		if key.lower() == 'scotland':
+ 			continue
+
 		cells = map(clean_int, cells)
 		stat  = dict(zip(mapping, cells))
 		stats[key] = stat
