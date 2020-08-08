@@ -1,3 +1,9 @@
+# Archived Notice
+This is the old version of [scovid19.xyz](https://scovid19.xyz) which scraped the gov.scot website.  
+The new version which uses the NHS OpenData API can be found [here](https://github.com/danstewart/scovid19.xyz).  
+
+---
+
 ## Site
 ```
 # Bootstrap
