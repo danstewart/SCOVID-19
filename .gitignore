@@ -1,8 +1,16 @@
-venv/
+#== Python Scraper ==#
+python-scraper/venv/
 .vscode/
-site/*.json
+python-scraper/site/*.json
 **/__pycache__/**
 
 # Generated
-site/index.html
-site/script.js
+python-scraper/site/index.html
+python-scraper/site/script.js
+
+
+#== Perl Mojo ==#
+perl-mojo/local/
+perl-mojo/src/hypnotoad.pid
+perl-mojo/src/log/
+
